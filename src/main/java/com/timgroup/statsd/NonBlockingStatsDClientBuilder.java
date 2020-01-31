@@ -24,6 +24,7 @@ public class NonBlockingStatsDClientBuilder {
     public int maxPacketSizeBytes = NonBlockingStatsDClient.DEFAULT_MAX_PACKET_SIZE_BYTES;
     public int processorWorkers = NonBlockingStatsDClient.DEFAULT_PROCESSOR_WORKERS;
     public int senderWorkers = NonBlockingStatsDClient.DEFAULT_SENDER_WORKERS;
+    public int lockShardGrain = NonBlockingStatsDClient.DEFAULT_LOCK_SHARD_GRAIN;
     public boolean blocking;
 
     public Callable<SocketAddress> addressLookup;
@@ -77,6 +78,11 @@ public class NonBlockingStatsDClientBuilder {
         return this;
     }
 
+    public NonBlockingStatsDClientBuilder lockShardGrain(int val) {
+        lockShardGrain = val;
+        return this;
+    }
+
     public NonBlockingStatsDClientBuilder blocking(boolean val) {
         blocking = val;
         return this;
@@ -120,11 +126,12 @@ public class NonBlockingStatsDClientBuilder {
         if (addressLookup != null) {
             return new NonBlockingStatsDClient(prefix, queueSize, constantTags, errorHandler,
                     addressLookup, timeout, socketBufferSize, maxPacketSizeBytes, entityID,
-                    bufferPoolSize, processorWorkers, senderWorkers, blocking);
+                    bufferPoolSize, processorWorkers, senderWorkers, lockShardGrain, blocking);
         } else {
             return new NonBlockingStatsDClient(prefix, queueSize, constantTags, errorHandler,
                     staticStatsDAddressResolution(hostname, port), timeout, socketBufferSize, maxPacketSizeBytes,
-                    entityID, bufferPoolSize, processorWorkers, senderWorkers, blocking);
+                    entityID, bufferPoolSize, processorWorkers, senderWorkers, lockShardGrain,
+                    blocking);
         }
     }
 
